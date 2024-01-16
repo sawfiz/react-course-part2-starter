@@ -1,4 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
 import axios from "axios";
 
 interface Post {
@@ -9,34 +13,26 @@ interface Post {
 }
 
 export interface PageQuery {
-  page: number;
   pageSize: number;
 }
 
-const usePosts = (query: PageQuery) => {
-  const fetchData = () =>
-    axios
-      .get<Post[]>("https://jsonplaceholder.typicode.com/posts", {
-        params: {
-          _start: (query.page - 1) * query.pageSize,
-          _limit: query.pageSize,
-          keepPreviousData: true, // Better UX
-        },
-      })
-      .then((res) => res.data);
-
-  const {
-    data: posts,
-    error,
-    isLoading,
-  } = useQuery<Post[], Error>({
+const usePosts = (query: PageQuery) =>
+  useInfiniteQuery<Post[], Error>({
     queryKey: ["posts", query], // Refetch when query changes
-    queryFn: fetchData,
+    queryFn: ({ pageParam }) =>
+      axios
+        .get<Post[]>("https://jsonplaceholder.typicode.com/posts", {
+          params: {
+            _start: (pageParam - 1) * query.pageSize,
+            _limit: query.pageSize,
+          },
+        })
+        .then((res) => res.data),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) =>
+      lastPage.length > 0 ? allPages.length + 1 : undefined,
     staleTime: 10 * 1000, // 10 seconds
-
+    placeholderData: keepPreviousData, // Better UX
   });
-
-  return { posts, error, isLoading };
-};
 
 export default usePosts;

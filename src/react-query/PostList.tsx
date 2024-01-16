@@ -1,5 +1,7 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import usePosts from "./hooks/usePosts";
+import React from "react";
 
 interface Post {
   id: number;
@@ -10,35 +12,32 @@ interface Post {
 
 const PostList = () => {
   const pageSize = 5;
-  const [page, setPage] = useState(1);
-  const { posts, error, isLoading } = usePosts({ page, pageSize });
+  const { data, error, fetchNextPage, isFetchingNextPage } = usePosts({
+    pageSize,
+  });
 
   if (error) return <p>{error.message}</p>;
 
   return (
     <>
       <ul className="list-group">
-        {posts?.map((post) => (
-          <li key={post.id} className="list-group-item">
-            {post.title}
-            <p></p>
-            {post.body}
-          </li>
+        {data?.pages.map((page, index) => (
+          <React.Fragment key={index}>
+            {page.map((post) => (
+              <li key={post.id} className="list-group-item">
+                {post.title}
+              </li>
+            ))}
+          </React.Fragment>
         ))}
       </ul>
       <div className="my-3">
         <button
-          disabled={page === 1}
-          className="btn btn-primary"
-          onClick={() => setPage(page - 1)}
-        >
-          Previous Page
-        </button>
-        <button
+          disabled={isFetchingNextPage}
           className="btn btn-primary ms-3"
-          onClick={() => setPage(page + 1)}
+          onClick={() => fetchNextPage()}
         >
-          Next Page
+          {isFetchingNextPage? "Loading..." : "Load More"}
         </button>
       </div>
     </>
