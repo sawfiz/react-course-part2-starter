@@ -1,7 +1,6 @@
 import {
   keepPreviousData,
-  useInfiniteQuery,
-  useQuery,
+  useInfiniteQuery
 } from "@tanstack/react-query";
 import axios from "axios";
 
