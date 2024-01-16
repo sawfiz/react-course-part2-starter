@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import usePosts from "./hooks/usePosts";
 
 interface Post {
@@ -10,23 +9,14 @@ interface Post {
 }
 
 const PostList = () => {
-  const [userId, setUserId] = useState<number>();
-  const { posts, error, isLoading } = usePosts(userId);
+  const pageSize = 5;
+  const [page, setPage] = useState(1);
+  const { posts, error, isLoading } = usePosts({ page, pageSize });
 
   if (error) return <p>{error.message}</p>;
 
   return (
     <>
-      <select
-        className="form-select mb-3"
-        value={userId}
-        onChange={(e) => setUserId(parseInt(e.target.value))}
-      >
-        <option value="">Select a user</option>
-        <option value="1">User 1</option>
-        <option value="2">User 2 </option>
-        <option value="3">User 3</option>
-      </select>
       <ul className="list-group">
         {posts?.map((post) => (
           <li key={post.id} className="list-group-item">
@@ -36,6 +26,21 @@ const PostList = () => {
           </li>
         ))}
       </ul>
+      <div className="my-3">
+        <button
+          disabled={page === 1}
+          className="btn btn-primary"
+          onClick={() => setPage(page - 1)}
+        >
+          Previous Page
+        </button>
+        <button
+          className="btn btn-primary ms-3"
+          onClick={() => setPage(page + 1)}
+        >
+          Next Page
+        </button>
+      </div>
     </>
   );
 };
