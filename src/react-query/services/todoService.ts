@@ -1,3 +1,4 @@
+import APIClient from "./api-client";
 
 export interface Todo {
   id: number;
@@ -5,3 +6,5 @@ export interface Todo {
   userId: number;
   completed: boolean;
 }
+
+export default new APIClient<Todo>("/todos");

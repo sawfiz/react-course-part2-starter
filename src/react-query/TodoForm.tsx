@@ -33,7 +33,7 @@ const TodoForm = () => {
         </div>
         <div className="col">
           <button disabled={addTodo.isPending} className="btn btn-primary">
-            {addTodo.isPending ? "Saving" : "Add"}
+            Add
           </button>
         </div>
       </form>
