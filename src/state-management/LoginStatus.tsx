@@ -1,7 +1,8 @@
-import useAuth from "./auth/useAuth";
+import useAuthStore from "./auth/AuthStore";
 
 const LoginStatus = () => {
-  const { user, dispatch } = useAuth();
+  // const { user, dispatch } = useAuth();
+  const { user, login, logout } = useAuthStore();
 
   if (user)
     return (
@@ -9,7 +10,7 @@ const LoginStatus = () => {
         <div>
           <span className="mx-2">{user}</span>
           {/* <a onClick={() => setUser('')} href="#"> */}
-          <a onClick={() => dispatch({ type: "Logout" })} href="#">
+          <a onClick={() => logout()} href="#">
             Logout
           </a>
         </div>
@@ -18,7 +19,7 @@ const LoginStatus = () => {
   return (
     <div>
       {/* <a onClick={() => setUser('mosh.hamedani')} href="#"> */}
-      <a onClick={() => dispatch({ type: "Login", user: "mosh" })} href="#">
+      <a onClick={() => login("mosh")} href="#">
         Login
       </a>
     </div>
