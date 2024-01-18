@@ -13,9 +13,9 @@ interface DeleteTask {
   taskId: number;
 }
 
-type Action = AddTask | DeleteTask;
+export type TaskAction = AddTask | DeleteTask;
 
-export default function taskReducer(tasks: Task[], action: Action): Task[] {
+export default function taskReducer(tasks: Task[], action: TaskAction): Task[] {
   switch (action.type) {
     case "AddTask":
       return [...tasks, action.task];
